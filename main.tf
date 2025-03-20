@@ -114,7 +114,7 @@ resource "aws_cloudwatch_dashboard" "lambda_dashboard" {
         width  = 24
         height = 6
         properties = {
-          query = "SOURCE '/aws/lambda/g5_lambda' | fields @timestamp, @message | filter @message like 'Hi there'",
+          query = "SOURCE '/aws/lambda/g5_lambda_a' | fields @timestamp, @message | filter @message like 'Hi there'",
           region = "eu-west-3",
           title  = "Lambda Logs - Hi there Messages",
           view   = "table"
