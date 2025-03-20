@@ -11,7 +11,7 @@ data "archive_file" "lambda_zip" {
 
 # Create IAM role for Lambda
 resource "aws_iam_role" "lambda_role" {
-  name = "g5_lambda"
+  name = "g5_lambda_a"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -35,7 +35,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
 
 # Create Lambda function
 resource "aws_lambda_function" "paris_time_lambda" {
-  function_name    = "g5_lambda"
+  function_name    = "g5_lambda_a"
   filename         = data.archive_file.lambda_zip.output_path
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   role             = aws_iam_role.lambda_role.arn
@@ -52,7 +52,7 @@ resource "aws_lambda_function" "paris_time_lambda" {
 
 # Create API Gateway to expose Lambda
 resource "aws_apigatewayv2_api" "lambda_api" {
-  name          = "g5_api"
+  name          = "g5_api_a"
   protocol_type = "HTTP"
 }
 
