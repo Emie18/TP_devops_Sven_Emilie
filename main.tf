@@ -84,7 +84,52 @@ resource "aws_lambda_permission" "api_gateway_permission" {
   source_arn    = "${aws_apigatewayv2_api.lambda_api.execution_arn}/*/*"
 }
 
+resource "aws_cloudwatch_dashboard" "lambda_dashboard" {
+  dashboard_name = "g5_dashboard_a"
+
+  dashboard_body = jsonencode({
+    widgets = [
+      {
+        type   = "metric"
+        x      = 0
+        y      = 0
+        width  = 12
+        height = 6
+        properties = {
+          metrics = [
+            ["AWS/Lambda", "Invocations", "FunctionName", "g5_lambda"],
+            ["AWS/Lambda", "Errors", "FunctionName", "g5_lambda"],
+            ["AWS/Lambda", "Duration", "FunctionName", "g5_lambda"]
+          ]
+          period = 300
+          stat   = "Sum"
+          region = "eu-west-3"
+          title  = "Lambda Metrics"
+        }
+      },
+      {
+        type   = "log"
+        x      = 0
+        y      = 6
+        width  = 24
+        height = 6
+        properties = {
+          query = "SOURCE '/aws/lambda/g5_lambda' | fields @timestamp, @message | filter @message like 'Hi there'",
+          region = "eu-west-3",
+          title  = "Lambda Logs - Hi there Messages",
+          view   = "table"
+        }
+      }
+    ]
+  })
+}
+
+
 # Output the API endpoint URL
 output "api_endpoint" {
   value = "${aws_apigatewayv2_stage.lambda_stage.invoke_url}/time"
+}
+
+output "cloudwatch_dashboard_url" {
+  value = "https://eu-west-3.console.aws.amazon.com/cloudwatch/home?region=eu-west-3#dashboards:name=${aws_cloudwatch_dashboard.lambda_dashboard.dashboard_name}"
 }
