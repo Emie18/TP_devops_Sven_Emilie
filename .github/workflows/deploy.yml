@@ -39,5 +39,5 @@ jobs:
         run: terraform output api_endpoint
       - name: Test API Gateway
         run: |
-          URL=$(terraform output -raw api_gateway_url)
+          URL=$(terraform output -raw api_endpoint)
           curl -X GET "$URL"
