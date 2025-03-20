@@ -31,7 +31,7 @@ jobs:
       - name: Restore Terraform state
         run: |
           mkdir -p ./tfstate
-          cp state_branch/tfstate/terraform.tfstate ./tfstate/terraform.tfstate || echo "No previous state found"
+          cp state_branch/tfstate/terraform.tfstate terraform.tfstate || echo "No previous state found"
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
