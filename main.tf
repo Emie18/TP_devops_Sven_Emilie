@@ -97,9 +97,9 @@ resource "aws_cloudwatch_dashboard" "lambda_dashboard" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/Lambda", "Invocations", "FunctionName", "g5_lambda"],
-            ["AWS/Lambda", "Errors", "FunctionName", "g5_lambda"],
-            ["AWS/Lambda", "Duration", "FunctionName", "g5_lambda"]
+            ["AWS/Lambda", "Invocations", "FunctionName", "g5_lambda_a"],
+            ["AWS/Lambda", "Errors", "FunctionName", "g5_lambda_a"],
+            ["AWS/Lambda", "Duration", "FunctionName", "g5_lambda_a"]
           ]
           period = 300
           stat   = "Sum"
