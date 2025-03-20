@@ -1,5 +1,6 @@
 exports.handler = async (event) => {
     try {
+        console.log("Hi there"); // Cette ligne sera capturée dans CloudWatch
         // Get current time in Paris (Europe/Paris timezone)
         const parisTime = new Date().toLocaleString('fr-FR', {
             timeZone: 'Europe/Paris',
@@ -11,17 +12,13 @@ exports.handler = async (event) => {
         const firstName = 'Sven';
         const lastName = 'Tual';
         
+        console.log(`Current time in Paris: ${parisTime}`);
+        console.log(`Returning name: ${firstName} ${lastName}`);
         // Prepare response
         const response = {
             statusCode: 200,
             body: JSON.stringify({
                 message: `Bonjour ${firstName} ${lastName}. Il est ${parisTime}`,
-                currentTime: parisTime,
-                timezone: 'Europe/Paris',
-                name: {
-                    firstName: firstName,
-                    lastName: lastName
-                }
             })
         };
         
