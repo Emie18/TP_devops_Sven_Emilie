@@ -39,16 +39,17 @@ jobs:
         run: terraform output api_endpoint
       - name: Save Terraform state
         run: |
-          mkdir -p /tfstate
-          cp -f terraform.tfstate /tfstate/ || echo "No state to copy"
-          ls -la # Debug: list files to verify state exists
-          ls -la /tfstate/ # Debug: verify state was copied
+          mkdir -p state_branch/tfstate
+          cp -f terraform.tfstate state_branch/tfstate/terraform.tfstate || echo "No state to copy"
+          ls -la state_branch/tfstate/ # Debug: Vérifier le state copié
+      
       - name: Commit and push state
         run: |
           cd state_branch
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add tfstate/terraform.tfstate || echo "No state file to add"
-          git status # Debug: check git status
+          git add tfstate/terraform.tfstate
+          git status # Debug: Vérifier le statut de Git
           git commit -m "Update Terraform state" || echo "No changes to commit"
           git push origin state
+
