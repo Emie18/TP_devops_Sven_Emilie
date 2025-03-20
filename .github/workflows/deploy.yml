@@ -37,7 +37,15 @@ jobs:
         run: terraform apply -auto-approve
       - name: Get API Gateway URL
         run: terraform output api_endpoint
-      - name: Test API Gateway
+      - name: Save Terraform state
         run: |
-          URL=$(terraform output -raw api_endpoint)
-          curl -X GET "$URL"
+          mkdir -p state_branch/tfstate
+          cp -f tfstate/terraform.tfstate state_branch/tfstate/ || echo "No state to copy"
+      - name: Commit and push state
+        run: |
+          cd state_branch
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add tfstate/terraform.tfstate
+          git commit -m "Update Terraform state" || echo "No changes to commit"
+          git push
