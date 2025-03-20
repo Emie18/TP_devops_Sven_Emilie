@@ -27,6 +27,8 @@ jobs:
         run: |
           mkdir -p tfstate
           cp state_branch/tfstate/terraform.tfstate tfstate/terraform.tfstate || echo "No previous state found"
+      - name: Debug Terraform state
+        run: cat tfstate/terraform.tfstate || echo "No state file found"
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
         with:
