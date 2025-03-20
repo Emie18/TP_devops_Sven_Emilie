@@ -44,9 +44,11 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        working-directory: ./tfstate
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        working-directory: ./tfstate
 
       - name: Get API Gateway URL
         run: terraform output api_endpoint
