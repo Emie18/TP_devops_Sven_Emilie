@@ -1,28 +1,28 @@
 name: Deploy Lambda via Terraform
-
 on:
   push:
     branches:
       - main
-
 permissions:
   contents: write  # Autorise le push sur la branche state
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}  # Uncomment if needed
+      AWS_REGION: us-east-1  # Change to your preferred region
     steps:
       - name: Checkout main branch
         uses: actions/checkout@v4
         with:
           ref: main
-
       - name: Checkout state branch
         uses: actions/checkout@v4
         with:
           ref: state
           path: state_branch
-
       - name: Restore Terraform state
         run: |
           mkdir -p tfstate
@@ -31,16 +31,12 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.6.0
-
       - name: Terraform Init
         run: terraform init
-
       - name: Terraform Apply
         run: terraform apply -auto-approve
-
       - name: Get API Gateway URL
         run: terraform output api_gateway_url
-
       - name: Test API Gateway
         run: |
           URL=$(terraform output -raw api_gateway_url)
