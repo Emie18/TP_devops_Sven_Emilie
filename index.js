@@ -9,7 +9,7 @@ exports.handler = async (event) => {
         });
         
         // Name information
-        const firstName = 'Sven';
+        const firstName = 'Emilie';
         const lastName = 'Tual';
         
         console.log(`Current time in Paris: ${parisTime}`);
