@@ -1,7 +1,6 @@
 name: Terraform Destroy
 
 on:
-  # Déclencheur manuel depuis l'interface GitHub
   workflow_dispatch:
 
 jobs:
@@ -12,11 +11,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: "1.5.0" # Spécifiez votre version de Terraform ici
+          terraform_version: "1.5.0"
+
+      - name: Terraform Init
+        run: terraform init
+
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
         env:
