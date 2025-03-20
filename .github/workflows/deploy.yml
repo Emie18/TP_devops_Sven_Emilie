@@ -36,7 +36,7 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve
       - name: Get API Gateway URL
-        run: terraform output api_gateway_url
+        run: terraform output api_endpoint
       - name: Test API Gateway
         run: |
           URL=$(terraform output -raw api_gateway_url)
