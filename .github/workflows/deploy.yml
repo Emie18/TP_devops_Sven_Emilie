@@ -4,47 +4,59 @@ on:
     branches:
       - main
 permissions:
-  contents: write  # Autorise le push sur la branche state
+  contents: write
 jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      # AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}  # Uncomment if needed
-      AWS_REGION: us-east-1  # Change to your preferred region
+      AWS_REGION: us-east-1
     steps:
       - name: Checkout main branch
         uses: actions/checkout@v4
         with:
           ref: main
+
       - name: Checkout state branch
         uses: actions/checkout@v4
         with:
           ref: state
           path: state_branch
+
+      - name: Debug State Branch Contents
+        run: |
+          ls -la state_branch/tfstate/
+          cat state_branch/tfstate/terraform.tfstate || echo "No state file found in state branch"
+
       - name: Restore Terraform state
         run: |
           mkdir -p tfstate
           cp state_branch/tfstate/terraform.tfstate tfstate/terraform.tfstate || echo "No previous state found"
+
       - name: Debug Terraform state
         run: cat tfstate/terraform.tfstate || echo "No state file found"
+
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.6.0
+
       - name: Terraform Init
         run: terraform init
+
       - name: Terraform Apply
         run: terraform apply -auto-approve
+
       - name: Get API Gateway URL
         run: terraform output api_endpoint
+
       - name: Save Terraform state
         run: |
           mkdir -p state_branch/tfstate
           cp -f terraform.tfstate state_branch/tfstate/terraform.tfstate || echo "No state to copy"
           ls -la state_branch/tfstate/ # Debug: Vérifier le state copié
-      
+
       - name: Commit and push state
         run: |
           cd state_branch
@@ -54,4 +66,3 @@ jobs:
           git status # Debug: Vérifier le statut de Git
           git commit -m "Update Terraform state" || echo "No changes to commit"
           git push origin state
-
