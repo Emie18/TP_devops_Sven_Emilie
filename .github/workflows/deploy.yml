@@ -1,6 +1,9 @@
 name: Deploy Lambda via Terraform
 on:
   push:
+    paths-ignore:
+       - 'README.md'
+       - 'deploy.yml'
     branches:
       - main
 permissions:
